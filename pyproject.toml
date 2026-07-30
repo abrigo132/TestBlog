@@ -11,9 +11,9 @@ dependencies = [
     "django-ninja (>=1.6.2,<2.0.0)",
     "django-ninja-jwt (>=5.4.5,<6.0.0)",
     "black (>=26.5.1,<27.0.0)",
-    "psycopg2 (>=2.9.12,<3.0.0)",
     "django-environ (>=0.14.0,<0.15.0)",
-    "djangorestframework (>=3.17.1,<4.0.0)"
+    "djangorestframework (>=3.17.1,<4.0.0)",
+    "psycopg2-binary (>=2.9.12,<3.0.0)"
 ]
 
 
