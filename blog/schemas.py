@@ -41,3 +41,23 @@ class PostListSchema(Schema):
     @staticmethod
     def resolve_author_username(obj):
         return obj.author.username
+
+
+class CommentCreate(Schema):
+    content: str
+
+
+class CommentResponse(Schema):
+    id: int
+    content: str
+    created_at: datetime
+    author_id: int
+    author_username: str
+
+    @staticmethod
+    def resolve_author_username(obj):
+        return obj.author.username
+
+
+class CommentUpdate(Schema):
+    content: str
