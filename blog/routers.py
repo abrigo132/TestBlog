@@ -44,7 +44,7 @@ def get_post_by_id(request, post_id: int):
 
 
 @router.put(
-    "/{post_id}", response={201: PostResponse, 404: dict, 403: dict}, auth=JWTAuth()
+    "/{post_id}", response={200: PostResponse, 404: dict, 403: dict}, auth=JWTAuth()
 )
 def update_post(request, post_id: int, payload: PostUpdate):
     post = crud.get_post(post_id=post_id)
@@ -61,10 +61,10 @@ def update_post(request, post_id: int, payload: PostUpdate):
         category=payload.category,
     )
 
-    return 201, updated_post
+    return 200, updated_post
 
 
-@router.delete("/{post_id}", response={201: None, 404: dict, 403: dict}, auth=JWTAuth())
+@router.delete("/{post_id}", response={204: None, 404: dict, 403: dict}, auth=JWTAuth())
 def delete_post(request, post_id: int):
     post = crud.get_post(post_id=post_id)
     if post is None:
@@ -75,7 +75,7 @@ def delete_post(request, post_id: int):
 
     crud.delete_post(post)
 
-    return 201, None
+    return 204, None
 
 
 @router.get("/{post_id}/comments", response=List[CommentResponse])
