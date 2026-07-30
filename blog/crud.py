@@ -78,8 +78,14 @@ def get_comments_for_post(post_id: int) -> QuerySet[Comment]:
 
 
 def get_comment_by_id(comment_id: int) -> Optional[Comment]:
-    comment = Comment.objects.get(id=comment_id)
-    logger.info(f"Запрос комментария к посту {comment.post.id}")
+    comment = (
+        Comment.objects.filter(id=comment_id).select_related("author", "post").first()
+    )
+    if comment:
+        logger.info(f"Запрос комментария {comment_id} к посту {comment.post.id}")
+    else:
+        logger.info(f"Запрос несуществующего комментария {comment_id}")
+
     return comment
 
 
