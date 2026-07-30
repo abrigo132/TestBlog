@@ -2,20 +2,27 @@ from django.db.models import QuerySet
 from .models import Post, Comment
 from django.contrib.auth import get_user_model
 from typing import Optional
+import logging
 
 User = get_user_model()
+logger = logging.getLogger("blog")
 
 
 def create_post(author: User, title: str, content: str, category: str) -> Post:
-    return Post.objects.create(
+    post = Post.objects.create(
         author=author,
         title=title,
         content=content,
         category=category,
     )
+    logger.info(
+        f"Пост '{title}' успешно создан пользователем {author.username} (ID: {post.id})"
+    )
+    return post
 
 
 def get_post(post_id: int) -> Optional[Post]:
+    logger.info(f"Запрос поста {post_id}")
     return Post.objects.filter(id=post_id).select_related("author").first()
 
 
@@ -23,11 +30,15 @@ def get_all_posts(category: Optional[str] = None) -> QuerySet[Post, Post]:
     queryset = Post.objects.all().select_related("author")
     if category:
         queryset = queryset.filter(category=category)
+        logger.info(f"Запрос всех постов с категорией: {category}")
+    logger.info("Запрос всех постов без категории")
     return queryset
 
 
 def get_post_by_author(author_id: int) -> Optional[Post]:
-    return Post.objects.filter(author=author_id).select_related("author").first()
+    post = Post.objects.filter(author=author_id).select_related("author").first()
+    logger.info(f"Запрос всех постов пользователя: {author_id}")
+    return post
 
 
 def update_post(
@@ -43,30 +54,42 @@ def update_post(
     if category:
         post.category = category
     post.save()
+    logger.info(f"Пост {post.id} изменён")
     return post
 
 
 def delete_post(post: Post) -> None:
     post.delete()
+    logger.info(f"Пост {post.id} удалён")
 
 
 def create_comment(post: Post, user: User, content: str) -> Comment:
-    return Comment.objects.create(post=post, author=user, content=content)
+    comment = Comment.objects.create(post=post, author=user, content=content)
+    logger.info(
+        f"Комментарий к посту {post.id} создан пользователем {user.username} (ID: {comment.id})"
+    )
+    return comment
 
 
-def get_comments_for_post(post_id: int):
-    return Comment.objects.filter(post=post_id).select_related("author")
+def get_comments_for_post(post_id: int) -> QuerySet[Comment]:
+    comments = Comment.objects.filter(post=post_id).select_related("author")
+    logger.info(f"Запрос всех комментариев к посту: {post_id}")
+    return comments
 
 
 def get_comment_by_id(comment_id: int) -> Optional[Comment]:
-    return Comment.objects.get(id=comment_id)
+    comment = Comment.objects.get(id=comment_id)
+    logger.info(f"Запрос комментария к посту {comment.post.id}")
+    return comment
 
 
 def update_comment(content: str, comment: Comment) -> Comment:
     comment.content = content
     comment.save()
+    logger.info(f"Комментарий с id {comment.id} обновлён")
     return comment
 
 
 def delete_comment(comment: Comment) -> None:
     comment.delete()
+    logger.info(f"Комментарий с id {comment.id} удалён")
