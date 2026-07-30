@@ -39,7 +39,6 @@ def test_register_user_duplicate_username(api_client, user):
 
     response = api_client.post(url, data, format="json")
 
-    # Pydantic или наш CRUD вернет 400 или 422
     assert response.status_code in [400, 422]
     assert User.objects.count() == 1
 
@@ -47,7 +46,7 @@ def test_register_user_duplicate_username(api_client, user):
 @pytest.mark.django_db
 def test_register_user_missing_fields(api_client):
     url = "/api/users/register"
-    data = {"username": "incomplete"}  # Нет password
+    data = {"username": "incomplete"}
 
     response = api_client.post(url, data, format="json")
 

@@ -10,7 +10,7 @@ def get_json(response):
 
 @pytest.mark.django_db
 def test_create_post_success(authenticated_client, user):
-    url = "/api/posts/"  # Без слеша в конце
+    url = "/api/posts/"
     data = {
         "title": "Новый пост",
         "content": "Текст нового поста",
@@ -175,7 +175,6 @@ def test_create_comment_to_nonexistent_post(authenticated_client):
     response = authenticated_client.post(url, data, format="json")
 
     assert response.status_code == 404
-    # Исправлено: текст ошибки должен совпадать с тем, что в роутере
     assert get_json(response)["detail"] == "Пост не найден"
 
 
@@ -188,8 +187,6 @@ def test_get_comments_list(api_client, post, comment, comment_by_user2):
     res_data = get_json(response)
     assert len(res_data) == 2
 
-    # Исправлено: проверяем наличие контента в списке, а не строгий индекс,
-    # так как порядок сортировки в тестовой БД может варьироваться
     contents = [item["content"] for item in res_data]
     assert "Тестовый комментарий" in contents
     assert "Комментарий от второго пользователя" in contents
