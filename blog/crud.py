@@ -1,5 +1,5 @@
 from django.db.models import QuerySet
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth import get_user_model
 from typing import Optional
 
