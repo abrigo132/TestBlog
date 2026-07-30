@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "users",
     "ninja_extra",
     "ninja",
+    "blog",
 ]
 
 MIDDLEWARE = [
