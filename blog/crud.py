@@ -48,3 +48,25 @@ def update_post(
 
 def delete_post(post: Post) -> None:
     post.delete()
+
+
+def create_comment(post: Post, user: User, content: str) -> Comment:
+    return Comment.objects.create(post=post, author=user, content=content)
+
+
+def get_comments_for_post(post_id: int):
+    return Comment.objects.filter(post=post_id).select_related("author")
+
+
+def get_comment_by_id(comment_id: int) -> Optional[Comment]:
+    return Comment.objects.get(id=comment_id)
+
+
+def update_comment(content: str, comment: Comment) -> Comment:
+    comment.content = content
+    comment.save()
+    return comment
+
+
+def delete_comment(comment: Comment) -> None:
+    comment.delete()
