@@ -1,0 +1,50 @@
+from django.db.models import QuerySet
+from .models import Post
+from django.contrib.auth import get_user_model
+from typing import Optional
+
+User = get_user_model()
+
+
+def create_post(author: User, title: str, content: str, category: str) -> Post:
+    return Post.objects.create(
+        author=author,
+        title=title,
+        content=content,
+        category=category,
+    )
+
+
+def get_post(post_id: int) -> Optional[Post]:
+    return Post.objects.filter(id=post_id).select_related("author").first()
+
+
+def get_all_posts(category: Optional[str] = None) -> QuerySet[Post, Post]:
+    queryset = Post.objects.all().select_related("author")
+    if category:
+        queryset = queryset.filter(category=category)
+    return queryset
+
+
+def get_post_by_author(author_id: int) -> Optional[Post]:
+    return Post.objects.filter(author=author_id).select_related("author").first()
+
+
+def update_post(
+    post: Post,
+    title: Optional[str] = None,
+    content: Optional[str] = None,
+    category: Optional[str] = None,
+) -> Post:
+    if title:
+        post.title = title
+    if content:
+        post.content = content
+    if category:
+        post.category = category
+    post.save()
+    return post
+
+
+def delete_post(post: Post) -> None:
+    post.delete()
