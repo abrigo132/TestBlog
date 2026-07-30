@@ -8,6 +8,9 @@ from .schemas import (
     PostUpdate,
     PostResponse,
     PostListSchema,
+    CommentCreate,
+    CommentResponse,
+    CommentUpdate,
 )
 from . import crud
 
